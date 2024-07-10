@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 
 
-string folderPath = @"C:\Users\AgbenorkuD\OneDrive - AECOM\Documents 1\DiRoots\FamilyReviser\Families\MP2ACCULC3001-BOF-BS00-AA-000-M3-AR-000003";
+string folderPath = @"C:\Users\AgbenorkuD\OneDrive - AECOM\Documents 1\DiRoots\FamilyReviser\Families\MP2ACMIXM3017-L&VA-XX-AA-000-M3-AR-000001_Revised";
 
-List<string> prefixes = new List<string> { "ARC","BHE", "KONE"};
+List<string> prefixes = new List<string> { "ARC"};
 ValidateFilesInFolder(folderPath, prefixes);
 
 
@@ -65,11 +65,17 @@ static void ValidateFilesInFolder(string folderPath, List<string> prefixes)
 
 static bool ValidateBS8541String(string input, List<string> prefixes)
 {
-    // Sample regex for basic validation with three or four parts, accepting "_" and "-"
-    string pattern = @"^[A-Za-z0-9]+[_-][A-Za-z0-9]+[_-][A-Za-z0-9]+([_-][A-Za-z0-9]+)?([_-][A-Za-z0-9]+)?$";
+    // Sample regex for basic validation with multiple parts, accepting "_" and "-"
+    string pattern = @"^[A-Za-z0-9&]+[_-][A-Za-z0-9&]+[_-][A-Za-z0-9&]+([_-][A-Za-z0-9&]+)?([_-][A-Za-z0-9&]+)?([_-][A-Za-z0-9&]+)?([_-][A-Za-z0-9&]+)?([_-][A-Za-z0-9&]+)?([_-][A-Za-z0-9&]+)?$";
 
-    // Check if the input matches the pattern and starts with any of the specified prefixes
-    return Regex.IsMatch(input, pattern) && prefixes.Any(prefix => input.StartsWith(prefix));
+    // Check if the input matches the pattern
+    if (!Regex.IsMatch(input, pattern))
+    {
+        return false;
+    }
+
+    // Check if the input starts with any of the specified prefixes followed by "_" or "-"
+    return prefixes.Any(prefix => input.StartsWith(prefix + "_") || input.StartsWith(prefix + "-"));
 }
 
 static void WriteToFile(string folderPath, string fileName, List<string> content, double percentage)
